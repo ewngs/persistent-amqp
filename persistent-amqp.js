@@ -10,15 +10,17 @@ const channelMethods = [
 ];
 
 class PersistentAMQP extends EventEmitter {
-    constructor(connectString, options) {
+    constructor(options) {
         super();
         this._options = {
-            confirmChannel: options.confirmChannel || false
+            host: options.host,
+            confirmChannel: options.confirmChannel || false,
+            reconnectInterval: options.reconnectInterval || 1000,
+            channelReopenInterval: options.channelReopenInterval || 100
         };
         this._isConnected = false;
         this._isOpen = false;
         this._isTerminating = false;
-        this.connectString = connectString;
         this._connect();
     }
 
@@ -50,7 +52,7 @@ class PersistentAMQP extends EventEmitter {
             this._createChannel();
             return;
         }
-        amqp.connect(this.connectString).then(conn => {
+        amqp.connect(this._options.host).then(conn => {
             self.connection = conn;
             self._isConnected = true;
             console.log('AMQP Connection Opened');
@@ -120,7 +122,7 @@ class PersistentAMQP extends EventEmitter {
         this.nextConnectTimer = setTimeout(() => {
             self.nextConnectTimer = undefined;
             self._connect();
-        }, 1000);
+        }, this._options.reconnectInterval);
     }
 
     _clearNextConnectTimer() {
@@ -138,7 +140,7 @@ class PersistentAMQP extends EventEmitter {
         this.nextCreateChannelTimer = setTimeout(() => {
             self.nextCreateChannelTimer = undefined;
             self._createChannel();
-        });
+        }, this._options.channelReopenInterval);
     }
 
     _clearNextCreateChannelTimer() {
@@ -160,10 +162,13 @@ class PersistentAMQP extends EventEmitter {
 
 let persistentConnections = {};
 
-module.exports = function (connectString, options) {
-    if (!persistentConnections[connectString]) {
-        persistentConnections[connectString] = new PersistentAMQP(connectString, options || {});
+module.exports = function (options) {
+    let opts = typeof options == 'object' ? opts : {};
+    let host = opts.host || 'amqp://localhost';
+    opts.host = host;
+    if (!persistentConnections[host]) {
+        persistentConnections[host] = new PersistentAMQP(opts);
     }
 
-    return persistentConnections[connectString];
+    return persistentConnections[host];
 };
