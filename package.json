@@ -1,0 +1,37 @@
+{
+  "name": "persistent-amqp",
+  "version": "0.0.1-dev1",
+  "description": "Persistent AMQP Connection Handler",
+  "main": "persistent-amqp.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ewngs/persistent-amqp.git"
+  },
+  "keywords": [
+    "amqp",
+    "persistent",
+    "rabbitmq",
+    "reconnect"
+  ],
+  "author": {
+    "name": "Peter Kovacs",
+    "email": "kiwep@elasticwings.com"
+  },
+  "engines": {
+    "node": ">=2.5.0"
+  },
+  "dependencies": {
+    "amqplib": "0.3.2"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ewngs/persistent-amqp/issues"
+  },
+  "homepage": "https://github.com/ewngs/persistent-amqp#readme"
+}

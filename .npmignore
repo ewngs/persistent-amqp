@@ -1,0 +1,4 @@
+*~
+.DS_Store
+npm-error.log
+.travis.yml
