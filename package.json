@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "iojs --harmony_proxies --harmony_arrow_functions test/test-client.js"
+    "test-client": "iojs --harmony_proxies --harmony_arrow_functions test/test-client.js",
+    "test": "iojs --harmony_proxies --harmony_arrow_functions test/test.js"
   },
   "repository": {
     "type": "git",
@@ -33,5 +34,9 @@
   "bugs": {
     "url": "https://github.com/ewngs/persistent-amqp/issues"
   },
-  "homepage": "https://github.com/ewngs/persistent-amqp#readme"
+  "homepage": "https://github.com/ewngs/persistent-amqp#readme",
+  "devDependencies": {
+    "tap-spec": "^4.0.2",
+    "tape": "^4.0.1"
+  }
 }
