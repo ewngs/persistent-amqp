@@ -24,7 +24,7 @@
     "email": "kiwep@elasticwings.com"
   },
   "engines": {
-    "node": ">=2.5.0"
+    "iojs": ">=2.5.0"
   },
   "dependencies": {
     "amqplib": "0.3.2"
