@@ -7,8 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test-client": "iojs --harmony_proxies --harmony_arrow_functions test/test-client.js",
-    "test": "iojs --harmony_proxies --harmony_arrow_functions test/test.js"
+    "test-client": "iojs --harmony_arrow_functions test/test-client.js",
+    "test": "iojs --harmony_arrow_functions test/test.js"
   },
   "repository": {
     "type": "git",
