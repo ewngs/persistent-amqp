@@ -255,8 +255,8 @@ module.exports = {
     },
 
     closeAllConnections() {
-        Object.keys(connections).forEach(connection => {
-            connection.close();
+        Object.keys(connections).forEach(host => {
+            connections[host].close();
         });
     }
 };
