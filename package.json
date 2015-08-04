@@ -1,6 +1,6 @@
 {
   "name": "persistent-amqp",
-  "version": "0.0.1-dev1",
+  "version": "0.1.1",
   "description": "Persistent AMQP Connection Handler",
   "main": "persistent-amqp.js",
   "directories": {
@@ -24,6 +24,12 @@
     "name": "Peter Kovacs",
     "email": "kiwep@elasticwings.com"
   },
+  "contributors": [
+      {
+        "name": "Igor Mucsicska",
+        "email": "igor@elasticwings.com"
+      }
+  ],
   "engines": {
     "iojs": ">=2.5.0"
   },
