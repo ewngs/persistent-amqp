@@ -252,5 +252,11 @@ module.exports = {
         }
 
         return connections[host];
+    },
+
+    closeAllConnections() {
+        connections.forEach(connection => {
+            connection.close();
+        });
     }
 };
