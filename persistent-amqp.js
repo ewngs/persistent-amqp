@@ -141,6 +141,7 @@ class AMQPConnectionWrapper extends EventEmitter {
 
     constructor(options) {
         super();
+        this.setMaxListeners(100);
         this._options = {
             host: options.host,
             confirmChannel: options.confirmChannel || false,
