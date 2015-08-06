@@ -3,9 +3,6 @@
   "version": "0.1.3",
   "description": "Persistent AMQP Connection Handler",
   "main": "persistent-amqp.js",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
     "test-client": "iojs --harmony_arrow_functions test/test-client.js",
     "test": "iojs --harmony_arrow_functions test/test.js"
