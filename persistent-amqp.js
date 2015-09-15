@@ -3,6 +3,11 @@
 const EventEmitter = require('events').EventEmitter;
 const amqp = require('amqplib');
 
+const debug = require('debug');
+const logError = debug('amqp:error');
+const logDebug = debug('amqp:debug');
+logDebug.log = console.log.bind(console);
+
 const channelMethods = [
     'assertQueue', 'checkQueue', 'deleteQueue', 'purgeQueue', 'bindQueue', 'unbindQueue', 'assertExchange',
     'checkExchange', 'deleteExchange', 'bindExchange', 'unbindExchange', 'publish', 'sendToQueue', 'consume', 'cancel',
@@ -56,12 +61,12 @@ class AMQPChannelWrapper extends EventEmitter {
         let createMethodName = this._isConfirmChannel ? 'createConfirmChannel' : 'createChannel';
         this._connectionWrapper._connection[createMethodName]().then((chan) => {
             self._channel = chan;
-            console.log('AMQP Channel Opened');
+            logDebug('Channel opened');
             chan.on('close', self._onChannelClose.bind(self));
             chan.on('error', self._onChannelError.bind(self));
             self._executeHooks(self._openHooks).then((res) => self.emit('open', res)); // TODO: catch hook errors
         }).catch(err => {
-            console.error('AMQP Channel', err.toString());
+            logError('Channel', err.toString());
             self._scheduleNextCreateChannel();
         });
     }
@@ -85,7 +90,7 @@ class AMQPChannelWrapper extends EventEmitter {
     }
 
     _onChannelClose() {
-        console.error('AMQP Channel Closed');
+        logDebug('Channel closed');
         this._channel = undefined;
         this.emit('close');
         if (this._connectionWrapper.connected && !this._terminating) {
@@ -97,7 +102,7 @@ class AMQPChannelWrapper extends EventEmitter {
     }
 
     _onChannelError(err) {
-        console.error('AMQP Channel', err.toString());
+        logError('Channel', err.toString());
     }
 
     _scheduleNextCreateChannel() {
@@ -151,6 +156,7 @@ class AMQPConnectionWrapper extends EventEmitter {
         this._channels = [];
         this._numChannels = 0;
         this._connect();
+        logDebug(`Connection wrapper to ${this._options.host} created`);
     }
 
     createChannel(isConfirmChannel) {
@@ -187,25 +193,25 @@ class AMQPConnectionWrapper extends EventEmitter {
         }
         amqp.connect(this._options.host).then(conn => {
             self._connection = conn;
-            console.log('AMQP Connection Opened');
+            logDebug('Connection opened');
             conn.on('close', self._onConnectionClose.bind(self));
             conn.on('error', self._onConnectionError.bind(self));
             self.emit('connect');
         }).catch(err => {
-            console.error('AMQP Connection', err.toString());
+            logError('Connection', err.toString());
             self._scheduleNextConnect();
         });
     }
 
     _onConnectionClose() {
         this._connection = undefined;
-        console.error('AMQP Connection Closed');
+        logDebug('Connection closed');
         this.emit('disconnect');
         this._scheduleNextConnect();
     }
 
     _onConnectionError(err) {
-        console.error('AMQP Connection', err.toString());
+        logError('Connection', err.toString());
     }
 
     _scheduleNextConnect() {
@@ -229,7 +235,7 @@ class AMQPConnectionWrapper extends EventEmitter {
     _channelTerminated() {
         this._numChannels--;
         if (this._connection && this._numChannels === 0) {
-            console.log('AMQP Connection: all channels closed, terminating');
+            logDebug('Connection', 'All channels closed, terminating');
             this.close();
         }
     }
